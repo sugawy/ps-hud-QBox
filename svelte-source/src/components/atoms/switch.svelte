@@ -37,19 +37,19 @@
 }
 
 .switch input[type="checkbox"]:checked::before {
-  background-color: var(--k_hud-secondary);
+  background-color: var(--ps-hud-secondary);
   filter: brightness(0.55);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 
 .switch input[type="checkbox"]:checked::after {
-  background-color: var(--k_hud-primary);
+  background-color: var(--ps-hud-primary);
 }
 
 .switch input[type="checkbox"]:not(:checked)::before {
   right: 20px;
-  background-color: var(--k_hud-secondary);
+  background-color: var(--ps-hud-secondary);
   filter: brightness(1.2);
   -webkit-transition: 0.4s;
   transition: 0.4s;

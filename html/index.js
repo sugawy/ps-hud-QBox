@@ -1423,7 +1423,7 @@ async function Me(n, e = {}) {
       headers: { "Content-Type": "application/json; charset=UTF-8" },
       body: JSON.stringify(e),
     },
-    o = "k_hud";
+    o = "ps-hud";
   try {
     return await (await fetch(`https://${o}/${n}`, t)).json();
   } catch {}
@@ -3724,7 +3724,7 @@ function Hs(n, e, t) {
       t(21, (U = C.getTotalLength()));
     } catch {
       console.log(
-        "Error: k_hud: Diamond-Ring-Icon should not be mounting when hiding icons"
+        "Error: ps-hud: Diamond-Ring-Icon should not be mounting when hiding icons"
       );
     }
   });
@@ -4356,7 +4356,7 @@ function Ls(n, e, t) {
         t(24, (J = U.getTotalLength()));
       } catch {
         console.log(
-          "Error: k_hud: Pill-Ring-Icon should not be mounting when hiding icons"
+          "Error: ps-hud: Pill-Ring-Icon should not be mounting when hiding icons"
         );
       }
     });
@@ -6103,7 +6103,7 @@ function oa(n, e, t) {
       t(20, (C = X.getTotalLength()));
     } catch {
       console.log(
-        "Error: k_hud: Triangle-Ring-Icon should not be mounting when hiding icons"
+        "Error: ps-hud: Triangle-Ring-Icon should not be mounting when hiding icons"
       );
     }
   });
@@ -6799,7 +6799,7 @@ function ua(n, e, t) {
       t(19, (V = x.getTotalLength()));
     } catch {
       console.log(
-        "Error: k_hud: Hexagon-Whole-Icon should not be mounting when hiding icons"
+        "Error: ps-hud: Hexagon-Whole-Icon should not be mounting when hiding icons"
       );
     }
   });
@@ -9166,7 +9166,7 @@ function $a(n) {
           e,
           "class",
           (l =
-            "button bg-[var(--k_hud-primary)] text-sm text-white py-2 px-4 my-2 rounded w-[150px] uppercase select-none disabled:opacity-25 disabled:cursor-not-allowed " +
+            "button bg-[var(--ps-hud-primary)] text-sm text-white py-2 px-4 my-2 rounded w-[150px] uppercase select-none disabled:opacity-25 disabled:cursor-not-allowed " +
             n[1])
         ),
         (e.disabled = n[2]);
@@ -9179,7 +9179,7 @@ function $a(n) {
         a & 2 &&
           l !==
             (l =
-              "button bg-[var(--k_hud-primary)] text-sm text-white py-2 px-4 my-2 rounded w-[150px] uppercase select-none disabled:opacity-25 disabled:cursor-not-allowed " +
+              "button bg-[var(--ps-hud-primary)] text-sm text-white py-2 px-4 my-2 rounded w-[150px] uppercase select-none disabled:opacity-25 disabled:cursor-not-allowed " +
               u[1]) &&
           r(e, "class", l),
         a & 4 && (e.disabled = u[2]);
@@ -10967,7 +10967,7 @@ function bu(n) {
         r(
           e,
           "class",
-          "bg-[var(--k_hud-primary)] block w-full p-1.5 my-2 text-black text-base font-bold rounded-md placeholder-[black] outline-none"
+          "bg-[var(--ps-hud-primary)] block w-full p-1.5 my-2 text-black text-base font-bold rounded-md placeholder-[black] outline-none"
         ),
         r(e, "placeholder", "Profile"),
         r(e, "pattern", "[A-Za-z1-9]"),

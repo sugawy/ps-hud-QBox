@@ -655,7 +655,7 @@ RegisterNetEvent('hud:client:BuffEffect', function(data)
             display = data.display,
         })
     else
-        print("k_hud error: data invalid from client event call: hud:client:BuffEffect")
+        print("ps-hud error: data invalid from client event call: hud:client:BuffEffect")
     end
 end)
 
@@ -676,7 +676,7 @@ RegisterNetEvent('hud:client:EnhancementEffect', function(data)
             enhancementName = data.enhancementName,
         })
     else
-        print("k_hud error: data invalid from client event call: hud:client:EnhancementEffect")
+        print("ps-hud error: data invalid from client event call: hud:client:EnhancementEffect")
     end
 end)
 

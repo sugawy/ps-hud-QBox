@@ -1,7 +1,7 @@
 :root{
-    --k_hud-primary: #03f0b5;
-    --k_hud-primary-hover: #13554b;
-    --k_hud-secondary: #444444
+    --ps-hud-primary: #03f0b5;
+    --ps-hud-primary-hover: #13554b;
+    --ps-hud-secondary: #444444
 }
 ::-webkit-scrollbar{
     width:5px
@@ -43,13 +43,13 @@ hr{
 input[type=checkbox].svelte-18ttrkn{
     -webkit-appearance:none;
     appearance:none;
-    background-color:var(--k_hud-primary);
+    background-color:var(--ps-hud-primary);
     margin:0;
     font:inherit;
-    color:var(--k_hud-primary);
+    color:var(--ps-hud-primary);
     width:1.6em;
     height:1.6em;
-    border:.15em solid var(--k_hud-primary);
+    border:.15em solid var(--ps-hud-primary);
     border-radius:.15em;
     transform:translateY(-.075em);
     display:grid;
@@ -79,7 +79,7 @@ input[type=checkbox].svelte-18ttrkn:focus{
     font-size:1.2em
 }
 .switch.svelte-c4h5cp input[type=checkbox].svelte-c4h5cp:checked:before{
-    background-color:var(--k_hud-secondary);
+    background-color:var(--ps-hud-secondary);
     filter:brightness(.55);
     -webkit-transition:.4s;
     transition:.4s;
@@ -88,11 +88,11 @@ input[type=checkbox].svelte-18ttrkn:focus{
     transform:translate(20px)
 }
 .switch.svelte-c4h5cp input[type=checkbox].svelte-c4h5cp:checked:after{
-    background-color:var(--k_hud-primary)
+    background-color:var(--ps-hud-primary)
 }
 .switch.svelte-c4h5cp input[type=checkbox].svelte-c4h5cp:not(:checked):before{
     right:20px;
-    background-color:var(--k_hud-secondary);
+    background-color:var(--ps-hud-secondary);
     filter:brightness(1.2);
     -webkit-transition:.4s;
     transition:.4s
@@ -163,8 +163,8 @@ p.svelte-1c7k2s5{
 .themed.svelte-1h7z46{
     --background: #292929;
     --listBackground: #292929;
-    --itemIsActiveBG: var(--k_hud-primary);
-    --itemHoverBG: var(--k_hud-primary-hover);
+    --itemIsActiveBG: var(--ps-hud-primary);
+    --itemHoverBG: var(--ps-hud-primary-hover);
     --border: #171717
 }
 .selectContainer>*{
@@ -953,8 +953,8 @@ p,hr{
 .bg-transparent{
     background-color:transparent
 }
-.bg-\[var\(--k_hud-primary\)\]{
-    background-color:var(--k_hud-primary)
+.bg-\[var\(--ps-hud-primary\)\]{
+    background-color:var(--ps-hud-primary)
 }
 .bg-\[\#292929\]{
     --tw-bg-opacity: 1;

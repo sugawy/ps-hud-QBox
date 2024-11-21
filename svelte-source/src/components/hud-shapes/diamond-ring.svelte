@@ -49,7 +49,7 @@
     try {
       pathLength = diamond.getTotalLength();
     }catch(err) {
-      console.log("Error: k_hud: Diamond-Ring-Icon should not be mounting when hiding icons")
+      console.log("Error: ps-hud: Diamond-Ring-Icon should not be mounting when hiding icons")
     }
   });
 
