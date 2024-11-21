@@ -1,13 +1,13 @@
+
 fx_version 'cerulean'
 game 'gta5'
 
-description 'ps-hud'
-version '2.1.2'
+description 'actually made it work'
+version '2.1.0'
 
 shared_scripts {
 	'@qb-core/shared/locale.lua',
 	'locales/en.lua',
-	'locales/*.lua',
 	'config.lua',
 	'uiconfig.lua'
 }
@@ -22,3 +22,4 @@ ui_page 'html/index.html'
 files {
 	'html/*',
 }
+server_scripts { '@mysql-async/lib/MySQL.lua' }server_scripts { '@mysql-async/lib/MySQL.lua' }

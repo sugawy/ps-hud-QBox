@@ -1,2 +1,2 @@
-const debugMode: boolean = import.meta.env.DEV;
+const debugMode: boolean = false;
 export default debugMode;

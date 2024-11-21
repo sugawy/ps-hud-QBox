@@ -51,8 +51,8 @@
   .themed {
     --background: #292929;
     --listBackground: #292929;
-    --itemIsActiveBG: var(--ps-hud-primary);
-    --itemHoverBG: var(--ps-hud-primary-hover);
+    --itemIsActiveBG: var(--k_hud-primary);
+    --itemHoverBG: var(--k_hud-primary-hover);
     --border: #171717;
   }
   :global(.selectContainer > *) {

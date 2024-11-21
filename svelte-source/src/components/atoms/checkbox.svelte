@@ -43,15 +43,15 @@ input[type="checkbox"] {
   /* Remove most all native input styles */
   appearance: none;
   /* For iOS < 15 */
-  background-color: var(--ps-hud-primary);
+  background-color: var(--k_hud-primary);
   /* Not removed via appearance */
   margin: 0;
 
   font: inherit;
-  color: var(--ps-hud-primary);
+  color: var(--k_hud-primary);
   width: 1.6em;
   height: 1.6em;
-  border: 0.15em solid var(--ps-hud-primary);
+  border: 0.15em solid var(--k_hud-primary);
   border-radius: 0.15em;
   transform: translateY(-0.075em);
 

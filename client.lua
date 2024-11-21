@@ -1,9 +1,8 @@
 local QBCore = exports['qb-core']:GetCoreObject()
-local serverId = GetPlayerServerId(PlayerId())
 local PlayerData = QBCore.Functions.GetPlayerData()
 local config = Config
 local UIConfig = UIConfig
-local speedMultiplier = config.UseMPH and 2.23694 or 3.6
+local speedMultiplier = 3.6
 local seatbeltOn = false
 local cruiseOn = false
 local showAltitude = false
@@ -33,8 +32,8 @@ local w = 0
 local radioTalking = false
 local Menu = {
     isOutMapChecked = true, -- isOutMapChecked
-    isOutCompassChecked = true, -- isOutCompassChecked
-    isCompassFollowChecked = true, -- isCompassFollowChecked
+    isOutCompassChecked = false, -- isOutCompassChecked
+    isCompassFollowChecked = false, -- isCompassFollowChecked
     isOpenMenuSoundsChecked = true, -- isOpenMenuSoundsChecked
     isResetSoundsChecked = true, -- isResetSoundsChecked
     isListSoundsChecked = true, -- isListSoundsChecked
@@ -42,12 +41,12 @@ local Menu = {
     isLowFuelChecked = true, -- isLowFuelChecked
     isCinematicNotifChecked = true, -- isCinematicNotifChecked
     isMapEnabledChecked = false, -- isMapEnabledChecked
-    isToggleMapBordersChecked = true, -- isToggleMapBordersChecked
+    isToggleMapBordersChecked = false, -- isToggleMapBordersChecked
     isDynamicEngineChecked = true, -- isDynamicEngineChecked
     isDynamicNitroChecked = true, -- isDynamicNitroChecked
-    isChangeCompassFPSChecked = true, -- isChangeCompassFPSChecked
-    isCompassShowChecked = true, -- isShowCompassChecked
-    isShowStreetsChecked = true, -- isShowStreetsChecked
+    isChangeCompassFPSChecked = false, -- isChangeCompassFPSChecked
+    isCompassShowChecked = false, -- isShowCompassChecked
+    isShowStreetsChecked = false, -- isShowStreetsChecked
     isPointerShowChecked = true, -- isPointerShowChecked
     isDegreesShowChecked = true, -- isDegreesShowChecked
     isCineamticModeChecked = false, -- isCineamticModeChecked
@@ -73,23 +72,8 @@ local function CinematicShow(bool)
     end
 end
 
-local function hasHarness()
-    local ped = PlayerPedId()
-    if not IsPedInAnyVehicle(ped, false) then return end
-
-    local _harness = false
-    local hasHarness = exports['qb-smallresources']:HasHarness()
-    if hasHarness then
-        _harness = true
-    else
-        _harness = false
-    end
-
-    harness = _harness
-end
 
 local function loadSettings()
-    QBCore.Functions.Notify(Lang:t("notify.hud_settings_loaded"), "success")
     Wait(1000)
     TriggerEvent("hud:client:LoadMap")
 end
@@ -164,29 +148,11 @@ AddEventHandler("pma-voice:radioActive", function(isRadioTalking)
 end)
 
 -- Callbacks & Events
-RegisterCommand('menu', function()
-    Wait(50)
-    if showMenu then return end
-    TriggerEvent("hud:client:playOpenMenuSounds")
-    SetNuiFocus(true, true)
-    SendNUIMessage({ action = "open" })
-    showMenu = true
-end)
 
-RegisterNUICallback('closeMenu', function(_, cb)
-    cb({})
-    Wait(50)
-    TriggerEvent("hud:client:playCloseMenuSounds")
-    showMenu = false
-    SetNuiFocus(false, false)
-end)
-
-RegisterKeyMapping('menu', Lang:t('info.open_menu'), 'keyboard', Config.OpenMenu)
 
 -- Reset hud
 local function restartHud()
     TriggerEvent("hud:client:playResetHudSounds")
-    QBCore.Functions.Notify(Lang:t("notify.hud_restart"), "error")
     Wait(1500)
     if IsPedInAnyVehicle(PlayerPedId()) then
         SendNUIMessage({
@@ -215,13 +181,53 @@ local function restartHud()
         show = true,
     })
     Wait(500)
-    QBCore.Functions.Notify(Lang:t("notify.hud_start"), "success")
     SendNUIMessage({
         action = 'menu',
         topic = 'restart',
     })
 end
 
+--[[  RegisterCommand('menu', function()
+     Wait(50)
+    if showMenu then return end
+    TriggerEvent("hud:client:playOpenMenuSounds")
+    SetNuiFocus(true, true)
+    SendNUIMessage({ action = "open" })
+     showMenu = true
+ end) ]]
+
+ -- Function to toggle the menu
+local function toggleMenu()
+    if showMenu then
+        -- Close the menu
+        SetNuiFocus(false, false)
+        SendNUIMessage({ action = "close" }) -- Notify the NUI to close the menu
+        showMenu = false
+    else
+        -- Open the menu
+        Wait(50)
+        TriggerEvent("hud:client:playOpenMenuSounds")
+        SetNuiFocus(true, true)
+        SendNUIMessage({ action = "open" }) -- Notify the NUI to open the menu
+        showMenu = true
+    end
+end
+
+-- Register the toggle command
+RegisterCommand('menu', toggleMenu, false)
+
+-- Register a key mapping for the menu
+RegisterKeyMapping('menu', 'Toggle Menu', 'keyboard', 'I')
+
+-- Handle closure from the NUI side
+RegisterNUICallback('closeMenu', function(_, cb)
+    -- Ensure focus is reset and menu state updated
+    SetNuiFocus(false, false)
+    showMenu = false
+    cb('ok') -- Notify the NUI that the request is processed
+end)
+ 
+ 
 RegisterNUICallback('restartHud', function(_, cb)
     cb({})
     Wait(50)
@@ -255,7 +261,7 @@ RegisterNUICallback('openMenuSounds', function(data, cb)
         Menu.isOpenMenuSoundsChecked = true
     else
         Menu.isOpenMenuSoundsChecked = false
-    end
+    end 
     TriggerEvent("hud:client:playHudChecklistSound")
 end)
 
@@ -327,7 +333,7 @@ RegisterNUICallback('showOutCompass', function(data, cb)
     cb({})
     Wait(50)
     if data.checked then
-        Menu.isOutCompassChecked = true
+        Menu.isOutCompassChecked = false
     else
         Menu.isOutCompassChecked = false
     end
@@ -338,7 +344,7 @@ RegisterNUICallback('showFollowCompass', function(data, cb)
     cb({})
 	Wait(50)
     if data.checked then
-        Menu.isCompassFollowChecked = true
+        Menu.isCompassFollowChecked = false
     else
         Menu.isCompassFollowChecked = false
     end
@@ -408,50 +414,9 @@ RegisterNetEvent("hud:client:LoadMap", function()
     if aspectRatio > defaultAspectRatio then
         minimapOffset = ((defaultAspectRatio-aspectRatio)/3.6)-0.008
     end
-    if Menu.isToggleMapShapeChecked == "square" then
-        RequestStreamedTextureDict("squaremap", false)
-        if not HasStreamedTextureDictLoaded("squaremap") then
-            Wait(150)
-        end
-        if Menu.isMapNotifChecked then
-            QBCore.Functions.Notify(Lang:t("notify.load_square_map"))
-        end
-        SetMinimapClipType(0)
-        AddReplaceTexture("platform:/textures/graphics", "radarmasksm", "squaremap", "radarmasksm")
-        AddReplaceTexture("platform:/textures/graphics", "radarmask1g", "squaremap", "radarmasksm")
-        -- 0.0 = nav symbol and icons left
-        -- 0.1638 = nav symbol and icons stretched
-        -- 0.216 = nav symbol and icons raised up
-        SetMinimapComponentPosition("minimap", "L", "B", 0.0 + minimapOffset, -0.047, 0.1638, 0.183)
-
-        -- icons within map
-        SetMinimapComponentPosition("minimap_mask", "L", "B", 0.0 + minimapOffset, 0.0, 0.128, 0.20)
-
-        -- -0.01 = map pulled left
-        -- 0.025 = map raised up
-        -- 0.262 = map stretched
-        -- 0.315 = map shorten
-        SetMinimapComponentPosition('minimap_blur', 'L', 'B', -0.01 + minimapOffset, 0.025, 0.262, 0.300)
-        SetBlipAlpha(GetNorthRadarBlip(), 0)
-        SetRadarBigmapEnabled(true, false)
-        SetMinimapClipType(0)
-        Wait(50)
-        SetRadarBigmapEnabled(false, false)
-        if Menu.isToggleMapBordersChecked then
-            showCircleB = false
-            showSquareB = true
-        end
-        Wait(1200)
-        if Menu.isMapNotifChecked then
-            QBCore.Functions.Notify(Lang:t("notify.loaded_square_map"))
-        end
-    elseif Menu.isToggleMapShapeChecked == "circle" then
-        RequestStreamedTextureDict("circlemap", false)
+    RequestStreamedTextureDict("circlemap", false)
         if not HasStreamedTextureDictLoaded("circlemap") then
             Wait(150)
-        end
-        if Menu.isMapNotifChecked then
-            QBCore.Functions.Notify(Lang:t("notify.load_circle_map"))
         end
         SetMinimapClipType(1)
         AddReplaceTexture("platform:/textures/graphics", "radarmasksm", "circlemap", "radarmasksm")
@@ -474,15 +439,8 @@ RegisterNetEvent("hud:client:LoadMap", function()
         SetRadarBigmapEnabled(true, false)
         Wait(50)
         SetRadarBigmapEnabled(false, false)
-        if Menu.isToggleMapBordersChecked then
-            showSquareB = false
-            showCircleB = true
-        end
+        showCircleB = false
         Wait(1200)
-        if Menu.isMapNotifChecked then
-            QBCore.Functions.Notify(Lang:t("notify.loaded_circle_map"))
-        end
-    end
 end)
 
 RegisterNUICallback('ToggleMapShape', function(data, cb)
@@ -523,7 +481,7 @@ RegisterNUICallback('showCompassBase', function(data, cb)
     cb({})
 	Wait(50)
     if data.checked then
-        Menu.isCompassShowChecked = true
+        Menu.isCompassShowChecked = false
     else
         Menu.isCompassShowChecked = false
     end
@@ -534,7 +492,7 @@ RegisterNUICallback('showStreetsNames', function(data, cb)
     cb({})
 	Wait(50)
     if data.checked then
-        Menu.isShowStreetsChecked = true
+        Menu.isShowStreetsChecked = false
     else
         Menu.isShowStreetsChecked = false
     end
@@ -545,7 +503,7 @@ RegisterNUICallback('showPointerIndex', function(data, cb)
     cb({})
 	Wait(50)
     if data.checked then
-        Menu.isPointerShowChecked = true
+        Menu.isPointerShowChecked = false
     else
         Menu.isPointerShowChecked = false
     end
@@ -556,7 +514,7 @@ RegisterNUICallback('showDegreesNum', function(data, cb)
     cb({})
 	Wait(50)
     if data.checked then
-        Menu.isDegreesShowChecked = true
+        Menu.isDegreesShowChecked = false
     else
         Menu.isDegreesShowChecked = false
     end
@@ -567,7 +525,7 @@ RegisterNUICallback('changeCompassFPS', function(data, cb)
     cb({})
 	Wait(50)
     if data.fps == "optimized" then
-        Menu.isChangeCompassFPSChecked = true
+        Menu.isChangeCompassFPSChecked = false
     else
         Menu.isChangeCompassFPSChecked = false
     end
@@ -579,14 +537,8 @@ RegisterNUICallback('cinematicMode', function(data, cb)
     Wait(50)
     if data.checked then
         CinematicShow(true)
-        if Menu.isCinematicNotifChecked then
-            QBCore.Functions.Notify(Lang:t("notify.cinematic_on"))
-        end
     else
         CinematicShow(false)
-        if Menu.isCinematicNotifChecked then
-            QBCore.Functions.Notify(Lang:t("notify.cinematic_off"), 'error')
-        end
         local player = PlayerPedId()
         local vehicle = GetVehiclePedIsIn(player)
         if (IsPedInAnyVehicle(player) and not IsThisModelABicycle(vehicle)) or not Menu.isOutMapChecked then
@@ -614,6 +566,10 @@ RegisterNUICallback('updateMenuSettingsToClient', function(data, cb)
     Menu.isPointerShowChecked = data.isPointerShowChecked
     CinematicShow(data.isCineamticModeChecked)
     cb({})
+    if Menu.isMapEnabledChecked then
+        Wait(50)
+        TriggerEvent("hud:client:LoadMap")
+    end
 end)
 
 RegisterNetEvent("hud:client:EngineHealth", function(newEngine)
@@ -629,20 +585,8 @@ RegisterNetEvent('hud:client:UpdateNeeds', function(newHunger, newThirst) -- Tri
     thirst = newThirst
 end)
 
-AddStateBagChangeHandler('hunger', ('player:%s'):format(serverId), function(_, _, value)
-    hunger = value
-end)
-
-AddStateBagChangeHandler('thirst', ('player:%s'):format(serverId), function(_, _, value)
-    thirst = value
-end)
-
 RegisterNetEvent('hud:client:UpdateStress', function(newStress) -- Add this event with adding stress elsewhere
     stress = newStress
-end)
-
-AddStateBagChangeHandler('stress', ('player:%s'):format(serverId), function(_, _, value)
-    stress = value
 end)
 
 RegisterNetEvent('hud:client:ToggleShowSeatbelt', function()
@@ -711,7 +655,7 @@ RegisterNetEvent('hud:client:BuffEffect', function(data)
             display = data.display,
         })
     else
-        print("PS-Hud error: data invalid from client event call: hud:client:BuffEffect")
+        print("k_hud error: data invalid from client event call: hud:client:BuffEffect")
     end
 end)
 
@@ -732,22 +676,21 @@ RegisterNetEvent('hud:client:EnhancementEffect', function(data)
             enhancementName = data.enhancementName,
         })
     else
-        print("PS-Hud error: data invalid from client event call: hud:client:EnhancementEffect")
+        print("k_hud error: data invalid from client event call: hud:client:EnhancementEffect")
     end
 end)
 
-RegisterCommand('+engine', function()
+RegisterCommand('motor', function()
     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
     if vehicle == 0 or GetPedInVehicleSeat(vehicle, -1) ~= PlayerPedId() then return end
     if GetIsVehicleEngineRunning(vehicle) then
-        QBCore.Functions.Notify(Lang:t("notify.engine_off"))
+         exports['k_ui']:Notify(Lang:t("notify.engine_off"))
     else
-        QBCore.Functions.Notify(Lang:t("notify.engine_on"))
+         exports['k_ui']:Notify(Lang:t("notify.engine_on"))
     end
     SetVehicleEngineOn(vehicle, not GetIsVehicleEngineRunning(vehicle), false, true)
 end)
 
-RegisterKeyMapping('+engine', Lang:t('info.toggle_engine'), 'keyboard', 'G')
 
 local function IsWhitelistedWeaponArmed(weapon)
     if weapon then
@@ -880,7 +823,7 @@ end
 
 CreateThread(function()
     local wasInVehicle = false
-    while true do
+    while true do        
         if LocalPlayer.state.isLoggedIn then
             Wait(500)
 
@@ -888,7 +831,7 @@ CreateThread(function()
             local player = PlayerPedId()
             local playerId = PlayerId()
             local weapon = GetSelectedPedWeapon(player)
-
+            
             -- Player hud
             if not IsWhitelistedWeaponArmed(weapon) then
                 -- weapon ~= 0 fixes unarmed on Offroad vehicle Blzer Aqua showing armed bug
@@ -906,13 +849,13 @@ CreateThread(function()
             if not IsEntityInWater(player) then
                 oxygen = 100 - GetPlayerSprintStaminaRemaining(playerId)
             end
-
+            
             -- Oxygen
             if IsEntityInWater(player) then
                 oxygen = GetPlayerUnderwaterTimeRemaining(playerId) * 10
             end
 
-            -- Voice setup
+            -- Voice setup            
             local talking = NetworkIsPlayerTalking(playerId)
             local voice = 0
             if LocalPlayer.state['proximity'] then
@@ -970,7 +913,7 @@ CreateThread(function()
                 end
 
                 wasInVehicle = true
-
+                
                 updatePlayerHud({
                     show,
                     GetEntityHealth(player) - 100,
@@ -1052,7 +995,7 @@ CreateThread(function()
                 if exports[Config.FuelScript]:GetFuel(GetVehiclePedIsIn(ped, false)) <= 20 then -- At 20% Fuel Left
                     if Menu.isLowFuelChecked then
                         TriggerServerEvent("InteractSound_SV:PlayOnSource", "pager", 0.10)
-                        QBCore.Functions.Notify(Lang:t("notify.low_fuel"), "error")
+                         exports['k_ui']:Notify(Lang:t("notify.low_fuel"), "error")
                         Wait(60000) -- repeats every 1 min until empty
                     end
                 end
@@ -1064,7 +1007,7 @@ end)
 
 -- Money HUD
 
-RegisterNetEvent('hud:client:ShowAccounts', function(type, amount)
+--[[ RegisterNetEvent('hud:client:ShowAccounts', function(type, amount)
     if type == 'cash' then
         SendNUIMessage({
             action = 'show',
@@ -1083,7 +1026,6 @@ end)
 RegisterNetEvent('hud:client:OnMoneyChange', function(type, amount, isMinus)
     cashAmount = PlayerData.money['cash']
     bankAmount = PlayerData.money['bank']
-		if type == 'cash' and amount == 0 then return end
     SendNUIMessage({
         action = 'updatemoney',
         cash = cashAmount,
@@ -1092,7 +1034,7 @@ RegisterNetEvent('hud:client:OnMoneyChange', function(type, amount, isMinus)
         minus = isMinus,
         type = type
     })
-end)
+end) ]]
 
 -- Harness Check / Seatbelt Check
 
@@ -1102,7 +1044,6 @@ CreateThread(function()
         if LocalPlayer.state.isLoggedIn then
             local ped = PlayerPedId()
             if IsPedInAnyVehicle(ped, false) then
-                hasHarness()
                 local veh = GetEntityModel(GetVehiclePedIsIn(ped, false))
                 if seatbeltOn ~= true and IsThisModelACar(veh) then
                     TriggerEvent("InteractSound_CL:PlayOnOne", "beltalarm", 0.6)
@@ -1122,11 +1063,8 @@ CreateThread(function() -- Speeding
             if IsPedInAnyVehicle(ped, false) then
                 local speed = GetEntitySpeed(GetVehiclePedIsIn(ped, false)) * speedMultiplier
                 local stressSpeed = seatbeltOn and config.MinimumSpeed or config.MinimumSpeedUnbuckled
-                local vehClass = GetVehicleClass(GetVehiclePedIsIn(ped, false))
-                if Config.VehClassStress[tostring(vehClass)] then
-                    if speed >= stressSpeed then
-                        TriggerServerEvent('hud:server:GainStress', math.random(1, 3))
-                    end
+                if speed >= stressSpeed then
+                    TriggerServerEvent('hud:server:GainStress', math.random(1, 3))
                 end
             end
         end
@@ -1320,9 +1258,9 @@ CreateThread(function()
             else
                 heading = tostring(round(360.0 - GetEntityHeading(player)))
             end
-
-            if heading == '360' then
-                heading = '0'
+            
+            if heading == '360' then 
+                heading = '0' 
             end
 
             local playerInVehcile = IsPedInAnyVehicle(player)
@@ -1330,9 +1268,9 @@ CreateThread(function()
             if heading ~= lastHeading or lastInVehicle ~= playerInVehcile then
                 if playerInVehcile then
                     local crossroads = getCrossroads(player)
-                    SendNUIMessage ({
-                        action = 'update',
-                        value = heading
+                    SendNUIMessage ({ 
+                        action = 'update', 
+                        value = heading 
                     })
                     updateBaseplateHud({
                         show,
@@ -1346,9 +1284,9 @@ CreateThread(function()
                     lastInVehicle = true
                 else
                     if not Menu.isOutCompassChecked then
-                        SendNUIMessage ({
-                            action = 'update',
-                            value = heading
+                        SendNUIMessage ({ 
+                            action = 'update', 
+                            value = heading 
                         })
                         SendNUIMessage ({
                             action = 'baseplate',
@@ -1392,3 +1330,10 @@ CreateThread(function()
         end
     end
 end)
+
+
+
+
+
+
+

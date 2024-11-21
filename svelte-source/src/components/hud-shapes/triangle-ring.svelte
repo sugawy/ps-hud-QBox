@@ -44,7 +44,7 @@
     try {
       pathLength = triangle.getTotalLength();
     }catch(err) {
-      console.log("Error: PS-Hud: Triangle-Ring-Icon should not be mounting when hiding icons")
+      console.log("Error: k_hud: Triangle-Ring-Icon should not be mounting when hiding icons")
     }
   });
 

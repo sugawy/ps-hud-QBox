@@ -18,11 +18,4 @@ local Translations = {
         ["stress_removed"] = "თავს გრძნობ რელაქსირებულად!"
     }
 }
-
-if GetConvar('qb_locale', 'en') == 'ge' then
-    Lang = Locale:new({
-        phrases = Translations,
-        warnOnMissing = true,
-        fallbackLang = Lang,
-    })
-end
+Lang = Locale:new({phrases = Translations, warnOnMissing = true})

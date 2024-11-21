@@ -121,7 +121,7 @@ export async function fetchNui(eventName: string, data: unknown = {}) {
     body: JSON.stringify(data),
   };
 
-  const resourceName = "ps-hud";
+  const resourceName = "k_hud";
 
   try {
     const resp = await fetch(`https://${resourceName}/${eventName}`, options);
